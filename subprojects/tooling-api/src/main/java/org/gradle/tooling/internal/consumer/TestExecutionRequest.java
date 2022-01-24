@@ -17,6 +17,7 @@
 package org.gradle.tooling.internal.consumer;
 
 import org.gradle.api.Transformer;
+import org.gradle.tooling.TestPatternSpec;
 import org.gradle.tooling.events.OperationDescriptor;
 import org.gradle.tooling.events.internal.OperationDescriptorWrapper;
 import org.gradle.tooling.events.test.TestOperationDescriptor;
@@ -37,13 +38,15 @@ public class TestExecutionRequest implements InternalTestExecutionRequest {
     private final Collection<InternalJvmTestRequest> internalJvmTestRequests;
     private final InternalDebugOptions debugOptions;
     private final Map<String, List<InternalJvmTestRequest>> taskAndTests;
+    private final List<TestPatternSpec> testPatternSpecs;
 
-    public TestExecutionRequest(Iterable<TestOperationDescriptor> operationDescriptors, Collection<String> testClassNames, Set<InternalJvmTestRequest> internalJvmTestRequests, InternalDebugOptions debugOptions, Map<String, List<InternalJvmTestRequest>> testTasks) {
+    public TestExecutionRequest(Iterable<TestOperationDescriptor> operationDescriptors, Collection<String> testClassNames, Set<InternalJvmTestRequest> internalJvmTestRequests, InternalDebugOptions debugOptions, Map<String, List<InternalJvmTestRequest>> testTasks, List<TestPatternSpec> testPatternSpecs) {
         this.testDescriptors = adaptDescriptors(operationDescriptors);
         this.testClassNames = testClassNames;
         this.internalJvmTestRequests = internalJvmTestRequests;
         this.debugOptions = debugOptions;
         this.taskAndTests = testTasks;
+        this.testPatternSpecs = testPatternSpecs;
     }
 
     public InternalDebugOptions getDebugOptions() {
@@ -66,6 +69,10 @@ public class TestExecutionRequest implements InternalTestExecutionRequest {
 
     public Collection<InternalJvmTestRequest> getInternalJvmTestRequests() {
         return internalJvmTestRequests;
+    }
+
+    public List<TestPatternSpec> getTestPatternSpecs() {
+        return testPatternSpecs;
     }
 
     private Collection<InternalTestDescriptor> adaptDescriptors(Iterable<TestOperationDescriptor> operationDescriptors) {

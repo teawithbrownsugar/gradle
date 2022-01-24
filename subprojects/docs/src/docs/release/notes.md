@@ -1,3 +1,4 @@
+
 The Gradle team is excited to announce Gradle @version@.
 
 This release features [1](), [2](), ... [n](), and more.
@@ -54,6 +55,25 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
 Gradle 7.6 introduces new failure types for the `Failure` interface returned by [FailureResult.getFailures()](javadoc/org/gradle/tooling/events/FailureResult.html#getFailures--): TestAssertionFailure and TestFrameworkFailure. 
 IDEs can now easily distinguish between different failures using standard progress event listeners. 
 Moreover, `TestAssertionFailure` exposes the expected and actual values if the used test framework supply such information.
+
+### Improvements for IDE integrators
+
+#### Fine-grained test selection with TestLauncher
+
+The [TestLauncher](javadoc/org/gradle/tooling/TestLauncher.html) interface now allows Tooling API clients to select test classes, methods, packages and patterns with a new API.
+
+```
+TestLauncher testLauncher = projectConnection.newTestLauncher();
+testLauncher.withTestsFor(spec -> {
+    spec.forTaskPath(":test")
+        .includePackage("org.pkg")
+        .includeClass("com.TestClass")
+        .includeMethod("com.TestClass")
+        .includePattern("io.*")
+}).run();
+```
+
+Note, that the new test selection interface only works if the target Gradle version is >=7.6.
 
 <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ADD RELEASE FEATURES ABOVE
