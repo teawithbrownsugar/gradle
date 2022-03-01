@@ -55,6 +55,22 @@ Gradle 7.6 introduces new failure types for the `Failure` interface returned by 
 IDEs can now easily distinguish between different failures using standard progress event listeners. 
 Moreover, `TestAssertionFailure` exposes the expected and actual values if the used test framework supply such information.
 
+### Improvements for IDE integrators
+
+#### Task execution with TestLauncher
+
+The [TestLauncher](javadoc/org/gradle/tooling/TestLauncher.html) interface now allows Tooling API clients to execute any tasks along with the selected tasks.
+
+```
+ProjectConnection connection = ...
+connection.newTestLauncher()
+          .withTaskAndTestClasses("integTest", ["org.MyTest"])
+          .forTasks("startDB")
+          .run()
+```
+
+Note, that the task execution only works if the target Gradle version is >=7.6.
+
 <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ADD RELEASE FEATURES ABOVE
 ==========================================================
