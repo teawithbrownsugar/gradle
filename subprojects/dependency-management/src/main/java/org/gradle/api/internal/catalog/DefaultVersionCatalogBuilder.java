@@ -53,7 +53,6 @@ import org.gradle.internal.management.VersionCatalogBuilderInternal;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -282,7 +281,7 @@ public class DefaultVersionCatalogBuilder implements VersionCatalogBuilderIntern
         srcProp.set(modelFile);
         Provider<byte[]> dataSource = providers.fileContents(srcProp).getAsBytes();
         try {
-            TomlCatalogFileParser.parse(new ByteArrayInputStream(dataSource.get()), this);
+            TomlCatalogFileParser.parse(modelFile.toPath(), this);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

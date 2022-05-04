@@ -34,7 +34,8 @@ import org.tomlj.TomlTable;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -79,10 +80,10 @@ public class TomlCatalogFileParser {
         "rejectAll"
     );
 
-    public static void parse(InputStream in, VersionCatalogBuilder builder) throws IOException {
+    public static void parse(Path catalogFilePath, VersionCatalogBuilder builder) throws IOException {
         StrictVersionParser strictVersionParser = new StrictVersionParser(Interners.newStrongInterner());
-        TomlParseResult result = Toml.parse(in);
-        assertNoParseErrors(result, builder);
+        TomlParseResult result = Toml.parse(Files.newBufferedReader(catalogFilePath));
+        assertNoParseErrors(result, catalogFilePath, builder);
         TomlTable metadataTable = result.getTable(METADATA_KEY);
         verifyMetadata(builder, metadataTable);
         TomlTable librariesTable = result.getTable(LIBRARIES_KEY);
@@ -103,7 +104,7 @@ public class TomlCatalogFileParser {
         parseVersions(versionsTable, builder, strictVersionParser);
     }
 
-    private static void assertNoParseErrors(TomlParseResult result, VersionCatalogBuilder builder) {
+    private static void assertNoParseErrors(TomlParseResult result, Path catalogFilePath, VersionCatalogBuilder builder) {
         if (result.hasErrors()) {
             List<TomlParseError> errors = result.errors();
             throwVersionCatalogProblem(builder, VersionCatalogProblemId.TOML_SYNTAX_ERROR, spec ->
@@ -114,7 +115,9 @@ public class TomlCatalogFileParser {
                             if (reason.length() > 0) {
                                 reason.append("\n");
                             }
-                            reason.append("At line ")
+                            reason.append("In file '")
+                                .append(catalogFilePath.toAbsolutePath())
+                                .append("' at line ")
                                 .append(error.position().line()).append(", column ")
                                 .append(error.position().column())
                                 .append(": ")
