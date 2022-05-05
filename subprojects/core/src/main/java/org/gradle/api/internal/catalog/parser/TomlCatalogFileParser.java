@@ -34,7 +34,7 @@ import org.tomlj.TomlTable;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
@@ -80,9 +80,9 @@ public class TomlCatalogFileParser {
         "rejectAll"
     );
 
-    public static void parse(Path catalogFilePath, VersionCatalogBuilder builder) throws IOException {
+    public static void parse(InputStream in, Path catalogFilePath, VersionCatalogBuilder builder) throws IOException {
         StrictVersionParser strictVersionParser = new StrictVersionParser(Interners.newStrongInterner());
-        TomlParseResult result = Toml.parse(Files.newBufferedReader(catalogFilePath));
+        TomlParseResult result = Toml.parse(in);
         assertNoParseErrors(result, catalogFilePath, builder);
         TomlTable metadataTable = result.getTable(METADATA_KEY);
         verifyMetadata(builder, metadataTable);

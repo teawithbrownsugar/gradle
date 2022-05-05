@@ -53,8 +53,10 @@ import org.gradle.internal.management.VersionCatalogBuilderInternal;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Locale;
@@ -280,8 +282,9 @@ public class DefaultVersionCatalogBuilder implements VersionCatalogBuilderIntern
         RegularFileProperty srcProp = objects.fileProperty();
         srcProp.set(modelFile);
         Provider<byte[]> dataSource = providers.fileContents(srcProp).getAsBytes();
+        InputStream dataStream = new ByteArrayInputStream(dataSource.get());
         try {
-            TomlCatalogFileParser.parse(modelFile.toPath(), this);
+            TomlCatalogFileParser.parse(dataStream, modelFile.toPath(), this);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
