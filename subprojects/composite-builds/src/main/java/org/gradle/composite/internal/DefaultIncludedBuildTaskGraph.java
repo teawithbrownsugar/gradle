@@ -252,5 +252,10 @@ public class DefaultIncludedBuildTaskGraph implements BuildTreeWorkGraphControll
         public State getTaskState() {
             return taskNode.getTaskState();
         }
+
+        @Override
+        public String healthDiagnostics() {
+            return taskNode.healthDiagnostics();
+        }
     }
 }

@@ -170,7 +170,7 @@ public class TaskInAnotherBuild extends TaskNode implements SelfExecutingNode {
 
     @Override
     protected String nodeSpecificHealthDiagnostics() {
-        return "taskState=" + taskState + ", signalled=" + signalled;
+        return "taskState=" + taskState + ", signalReceived=" + signalled + ", " + target.healthDiagnostics();
     }
 
     @Override

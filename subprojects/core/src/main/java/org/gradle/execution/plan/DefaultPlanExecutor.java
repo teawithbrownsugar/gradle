@@ -282,9 +282,7 @@ public class DefaultPlanExecutor implements PlanExecutor, Stoppable {
             System.out.println(formatter);
 
             IllegalStateException failure = new IllegalStateException("Unable to make progress running work. There are items queued for execution but none of them can be started");
-            for (PlanDetails details : queues) {
-                details.source.abortAllAndFail(failure);
-            }
+            abortAllAndFail(failure);
             coordinationService.notifyStateChange();
         }
     }

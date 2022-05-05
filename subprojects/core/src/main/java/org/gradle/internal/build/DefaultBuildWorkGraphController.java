@@ -175,6 +175,7 @@ public class DefaultBuildWorkGraphController implements BuildWorkGraphController
         final String taskPath;
         TaskNode taskNode;
         Runnable action = Runnables.doNothing();
+        int signalled;
 
         DefaultExportedTaskNode(String taskPath) {
             this.taskPath = taskPath;
@@ -237,14 +238,22 @@ public class DefaultBuildWorkGraphController implements BuildWorkGraphController
             }
         }
 
-        public boolean shouldSchedule() {
+        boolean shouldSchedule() {
             synchronized (lock) {
                 return taskNode == null || !taskNode.isRequired();
             }
         }
 
+        @Override
+        public String healthDiagnostics() {
+            synchronized (lock) {
+                return "exportedTaskState=" + getTaskState() + ", signalled=" + signalled;
+            }
+        }
+
         public void fireCompleted() {
             synchronized (lock) {
+                signalled++;
                 action.run();
                 action = Runnables.doNothing();
             }

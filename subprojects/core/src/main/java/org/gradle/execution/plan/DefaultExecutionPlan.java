@@ -900,7 +900,11 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
         updateAllDependenciesCompleteForPredecessors(node);
 
         if (node instanceof LocalTaskNode) {
-            completionHandler.accept((LocalTaskNode) node);
+            try {
+                completionHandler.accept((LocalTaskNode) node);
+            } catch (Throwable t) {
+                failures.add(t);
+            }
         }
     }
 
@@ -1005,8 +1009,8 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
     @Override
     public void abortAllAndFail(Throwable t) {
         lockCoordinator.assertHasStateLock();
-        abortExecution(true);
         failures.add(t);
+        abortExecution(true);
     }
 
     @Override
