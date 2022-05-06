@@ -24,6 +24,7 @@ import org.gradle.util.GradleVersion
 import org.gradle.util.PreconditionVerifier
 import org.gradle.util.internal.GUtil
 import org.junit.Rule
+import spock.lang.Ignore
 import spock.lang.Shared
 
 import java.nio.charset.StandardCharsets
@@ -71,6 +72,7 @@ abstract class DistributionIntegrationSpec extends AbstractIntegrationSpec {
         coreLibJarsCount + packagedPluginsJarCount + thirdPartyLibJarsCount
     }
 
+    @Ignore
     def "distribution size should not exceed a certain number"() {
         expect:
         def size = getZip().size()
