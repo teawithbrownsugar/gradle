@@ -954,6 +954,9 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
 
     private void maybeNodeReady(Node node) {
         if (node.allDependenciesComplete()) {
+            if (node.isInteresting()) {
+                System.out.println(Thread.currentThread() + " -> NODE IS READY TO START: " + node);
+            }
             maybeNodesReady = true;
             maybeNodesSelectable = true;
             if (node.isPriority()) {

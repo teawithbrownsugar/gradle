@@ -146,6 +146,9 @@ public class TaskInAnotherBuild extends TaskNode implements SelfExecutingNode {
         // This node is ready to "execute" when the task in the other build has completed
         if (!taskState.isComplete()) {
             taskState = target.getTaskState();
+            if (isInteresting()) {
+                System.out.println(Thread.currentThread() + " -> NODE " + this + " TARGET TASK STATE IS NOW " + taskState);
+            }
         }
         switch (taskState) {
             case Waiting:
