@@ -328,7 +328,7 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
     }
 
     @Override
-    public WorkSource<Node> finalizePlan() {
+    public void finalizePlan() {
         executionQueue.restart();
         while (executionQueue.hasNext()) {
             Node node = executionQueue.next();
@@ -337,7 +337,10 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
         }
 
         lockCoordinator.addLockReleaseListener(resourceUnlockListener);
+    }
 
+    @Override
+    public WorkSource<Node> asWorkSource() {
         // For now
         return this;
     }
@@ -901,6 +904,9 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
 
         if (node instanceof LocalTaskNode) {
             try {
+                if (node.isInteresting()) {
+                    System.out.println(Thread.currentThread() + " -> NOTIFYING NODE FINISHED IN SOURCE PLAN: " + node);
+                }
                 completionHandler.accept((LocalTaskNode) node);
             } catch (Throwable t) {
                 failures.add(t);
@@ -910,6 +916,9 @@ public class DefaultExecutionPlan implements ExecutionPlan, WorkSource<Node> {
 
     private void monitoredNodeReady(Node node) {
         lockCoordinator.assertHasStateLock();
+        if (node.isInteresting()) {
+            System.out.println(Thread.currentThread() + " -> RECEIVED NODE COMPLETE IN CONSUMING PLAN: " + node);
+        }
         if (node.updateAllDependenciesComplete()) {
             maybeNodeReady(node);
         }

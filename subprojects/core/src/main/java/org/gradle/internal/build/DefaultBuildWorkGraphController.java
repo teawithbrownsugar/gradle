@@ -137,7 +137,12 @@ public class DefaultBuildWorkGraphController implements BuildWorkGraphController
         private void nodeComplete(LocalTaskNode node) {
             DefaultExportedTaskNode exportedNode = nodesByPath.get(node.getTask().getPath());
             if (exportedNode != null) {
+                if (node.isInteresting()) {
+                    System.out.println(Thread.currentThread() + " -> NOTIFYING NODE FINISHED IN WORK GRAPH CONTROLLER: " + node);
+                }
                 exportedNode.fireCompleted();
+            } else if (node.isInteresting()) {
+                System.out.println(Thread.currentThread() + " -> NODE IS NOT REGISTERED IN WORK GRAPH CONTROLLER: " + node);
             }
         }
 

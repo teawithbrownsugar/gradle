@@ -66,6 +66,11 @@ public class LocalTaskNode extends TaskNode {
         return validationContext;
     }
 
+    @Override
+    public boolean isInteresting() {
+        return task.getName().endsWith("Tar");
+    }
+
     @Nullable
     @Override
     public ResourceLock getProjectToLock() {

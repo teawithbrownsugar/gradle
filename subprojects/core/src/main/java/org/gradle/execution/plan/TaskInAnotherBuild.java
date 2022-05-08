@@ -68,6 +68,11 @@ public class TaskInAnotherBuild extends TaskNode implements SelfExecutingNode {
         this.target = target;
     }
 
+    @Override
+    public boolean isInteresting() {
+        return taskPath.endsWith("Tar");
+    }
+
     public BuildIdentifier getTargetBuild() {
         return targetBuild;
     }

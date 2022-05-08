@@ -93,6 +93,10 @@ public abstract class Node implements Comparable<Node> {
         return "";
     }
 
+    public boolean isInteresting() {
+        return false;
+    }
+
     public NodeGroup getGroup() {
         return group;
     }
