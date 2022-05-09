@@ -223,7 +223,8 @@ class DefaultIncludedBuildTaskGraphParallelTest extends AbstractIncludedBuildTas
         @Override
         ExecutionResult<Void> executeTasks(BuildWorkPlan buildPlan) {
             plan.determineExecutionPlan()
-            return services.planExecutor.process(plan.finalizePlan()) { node -> }
+            plan.finalizePlan()
+            return services.planExecutor.process(plan.asWorkSource()) { node -> }
         }
 
         @Override

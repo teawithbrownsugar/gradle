@@ -1012,7 +1012,7 @@ class DefaultExecutionPlanTest extends AbstractExecutionPlanSpec {
         addToGraphAndPopulate([task3])
         executes(task1, task2, task3)
         def failures = []
-        executionPlan.finalizePlan().collectFailures(failures)
+        executionPlan.collectFailures(failures)
 
         then:
         failures == [failure]
